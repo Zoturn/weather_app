@@ -10,33 +10,38 @@ class App extends Component {
     const city = this.city.value;
     this.props.WeatherStore.AddCity(city);
     this.city.value = '';
+
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.WeatherStore.deleteCity();
+    const class_name = this.class
+
+    this.props.WeatherStore.deleteCity(class_name.className)
   }
-  componentWillMount(){
-    this.props.WeatherStore.current();
+
+  componentDidMount() {
+    this.props.WeatherStore.current()
   }
+
   render() {
     const {WeatherStore} = this.props;
 
     return (
-      <div className="App" >
-        <h2>Weather in the City.</h2>
+      <div className="App">
+        <h2>Weather in the City. You have {WeatherStore.weatherCount}</h2>
 
         <form onSubmit={e => this.hendleSubmit(e)}>
           <input type="text" placeholder="Enter city" ref={input => this.city = input}/>
-          <button>Add birds</button>
+          <button>Add City</button>
         </form>
 
         <ul>
           {WeatherStore.current_city.map(city => (
-            <li id={city}>
+            <li key={city}>
               {city}
               <ul>
                 {WeatherStore.current_weather.map(weather => (
-                  <li id={weather}>
+                  <li key={weather.toString()}>
                     {weather}
                   </li>
                 ))}
@@ -46,22 +51,35 @@ class App extends Component {
               </form>
             </li>
           ))}
-          {WeatherStore.city.map(city => (
-            <li id={city}>
-              {city}
-              <ul>
-                {WeatherStore.weather.map(weather => (
-                  <li id={weather}>
-                    {WeatherStore.weather[(WeatherStore.weather).length-1]}
-                  </li>
-                ))}
-              </ul>
-              <form onSubmit={e => this.handleSubmit(e)}>
-                <input className={city} type={'submit'} value={'delete'} ref={submit => this.class = submit}/>
-              </form>
-            </li>
-          ))}
         </ul>
+        <table>
+          <tbody>
+          <tr>
+            <td>
+              {WeatherStore.city.map(city => (
+                <div id={city}>
+                  {city}
+                </div>
+              ))}
+            </td>
+            <td>
+              {WeatherStore.weather.map(weather => (
+                <div id={weather}>
+                  {weather + '  '}
+                </div>
+
+              ))}
+            </td>
+            <td>
+              {WeatherStore.city.map(city => (
+                <form id={city + 1} onSubmit={e => this.handleSubmit(e)}>
+                  <input className={city} type={'submit'} value={'delete'} ref={submit => this.class = submit}/>
+                </form>
+              ))}
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
       </div>
     );
