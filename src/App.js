@@ -12,15 +12,15 @@ class App extends Component {
     this.city.value = '';
 
   }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const class_name = this.class
-
-    this.props.WeatherStore.deleteCity(class_name.className)
-  }
 
   componentDidMount() {
     this.props.WeatherStore.current()
+  }
+
+  deleteCity = e => {
+    e.preventDefault();
+    const className = e.target.className
+    this.props.WeatherStore.deleteCity(className)
   }
 
   render() {
@@ -35,49 +35,29 @@ class App extends Component {
           <button>Add City</button>
         </form>
 
-        <ul>
-          {WeatherStore.current_city.map(city => (
-            <li key={city}>
-              {city}
-              <ul>
-                {WeatherStore.current_weather.map(weather => (
-                  <li key={weather.toString()}>
-                    {weather}
-                  </li>
-                ))}
-              </ul>
-              <form onSubmit={e => this.handleSubmit(e)}>
-                <input className={city} type={'submit'} value={'delete'} ref={submit => this.class = submit}/>
-              </form>
-            </li>
-          ))}
-        </ul>
         <table>
           <tbody>
-          <tr>
-            <td>
-              {WeatherStore.city.map(city => (
+          {WeatherStore.currentCity.map(city => (
+            <tr key={city.city}>
+              <td>
                 <div id={city}>
-                  {city}
+                  {city.city + ' - ' + city.weather}
+                  <input className={city.city} type={'submit'} value={'delete'} onClick={this.deleteCity}/>
                 </div>
-              ))}
-            </td>
-            <td>
-              {WeatherStore.weather.map(weather => (
-                <div id={weather}>
-                  {weather + '  '}
+              </td>
+            </tr>
+          ))}
+          {localStorage.setItem("city", JSON.stringify(WeatherStore.city))}
+          {WeatherStore.city.map(city => (
+            <tr key={city.city}>
+              <td>
+                <div id={city}>
+                  {city.city + ' - ' + city.weather}
+                  <input className={city.city} type={'submit'} value={'delete'} onClick={this.deleteCity}/>
                 </div>
-
-              ))}
-            </td>
-            <td>
-              {WeatherStore.city.map(city => (
-                <form id={city + 1} onSubmit={e => this.handleSubmit(e)}>
-                  <input className={city} type={'submit'} value={'delete'} ref={submit => this.class = submit}/>
-                </form>
-              ))}
-            </td>
-          </tr>
+              </td>
+            </tr>
+          ))}
           </tbody>
         </table>
 
@@ -88,3 +68,5 @@ class App extends Component {
 
 
 export default App;
+
+
